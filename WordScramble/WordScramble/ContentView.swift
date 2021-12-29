@@ -46,6 +46,15 @@ struct ContentView: View {
             } message: {
                 Text(errorMessage)
             }
+            
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Start again") {
+                        resetGame()
+                        startGame()
+                    }
+                }
+            }
         }
     }
     
@@ -61,9 +70,22 @@ struct ContentView: View {
         fatalError("Could not load start.text from Bundle")
     }
     
+    func resetGame() {
+        usedWords.removeAll()
+    }
+    
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard answer.count > 0 else { return }
+        
+        guard answer.count > 2 else {
+            wordError(title: "Minimum lenght", message: "The word must have more than 2 letters")
+            return
+        }
+        
+        guard answer != rootWord else {
+            wordError(title: "Rootword used", message: "You can't use the rootword")
+            return
+        }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original")
