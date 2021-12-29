@@ -17,11 +17,17 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
+    @State private var totalScore = 0
+    
     var body: some View {
         
         NavigationView {
             
             List {
+                
+                Section {
+                    Text("Your score is: \(totalScore)")
+                }
                 
                 Section {
                     TextField("Enter your word", text: $newWord)
@@ -71,6 +77,7 @@ struct ContentView: View {
     }
     
     func resetGame() {
+        totalScore = 0
         usedWords.removeAll()
     }
     
@@ -106,6 +113,8 @@ struct ContentView: View {
             usedWords.insert(answer, at: 0)
         }
         
+        score(word: answer)
+        
         newWord = ""
     }
     
@@ -138,6 +147,12 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    
+    func score(word: String) {
+        let numberOfLetters = word.count
+        let numberOfPreviousWords = usedWords.count
+        totalScore += numberOfLetters * numberOfPreviousWords
     }
 }
 
